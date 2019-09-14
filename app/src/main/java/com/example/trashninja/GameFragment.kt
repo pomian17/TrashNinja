@@ -29,6 +29,7 @@ class GameFragment : Fragment() {
         addImage()
         setupTimer()
         countDownTimer.start()
+        score_view.text = "0"
     }
 
     override fun onDestroyView() {
@@ -48,7 +49,7 @@ class GameFragment : Fragment() {
                     )
                     constraintSet.applyTo(main_container)
                 }
-                val secondsToEnd = (millisUntilFinished / 1000).toInt() + 1
+                time_view.text = "%1\$02d:%2\$02d".format((millisUntilFinished / 1000/60).toInt() , (millisUntilFinished / 1000).toInt() )
             }
 
             override fun onFinish() {
