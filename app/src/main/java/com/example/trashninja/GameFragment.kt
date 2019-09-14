@@ -1,8 +1,11 @@
 package com.example.trashninja
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -49,7 +52,10 @@ class GameFragment : Fragment() {
                     )
                     constraintSet.applyTo(main_container)
                 }
-                time_view.text = "%1\$02d:%2\$02d".format((millisUntilFinished / 1000/60).toInt() , (millisUntilFinished / 1000).toInt() )
+                time_view.text = "%1\$02d:%2\$02d".format(
+                    (millisUntilFinished / 1000 / 60).toInt(),
+                    (millisUntilFinished / 1000).toInt()
+                )
             }
 
             override fun onFinish() {
@@ -58,14 +64,23 @@ class GameFragment : Fragment() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun addImage() {
         val imageView = ImageView(this.context)
 
         imageView.setImageResource(R.drawable.ic_android_black_24dp)
+        imageView.setOnTouchListener { _, event ->
+            when (event.action) {
+                //TODO
+                MotionEvent.ACTION_DOWN -> Log.d("GameFragment", "ACTION_DOWN")
+                MotionEvent.ACTION_UP -> Log.d("GameFragment", "ACTION_DOWN")
+                else -> Log.d("GameFragment", event.action.toString())
+            }
+            true
+        }
         imageView.id = View.generateViewId()
 
         main_container.addView(imageView)
-
         val constraintSet = ConstraintSet()
         constraintSet.clone(main_container)
 
