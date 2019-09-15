@@ -73,6 +73,10 @@ class GameFragment : Fragment() {
                                 it.imageView.id,
                                 it.yPos
                             )
+                            constraintSet.setHorizontalBias(
+                                it.imageView.id,
+                                it.xPos
+                            )
                             constraintSet.applyTo(main_container)
                         } else {
                             main_container.removeView(it.imageView)
