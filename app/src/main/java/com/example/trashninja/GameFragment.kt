@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.os.bundleOf
@@ -35,8 +38,8 @@ class GameFragment : Fragment() {
         }
     val trashes = mutableListOf<Trash>()
 
-    var width by Delegates.notNull<Int>()
-    var height  by Delegates.notNull<Int>()
+    private var width by Delegates.notNull<Int>()
+    private var height by Delegates.notNull<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -68,12 +71,12 @@ class GameFragment : Fragment() {
         countDownTimer = object : CountDownTimer(TIME_TO_COUNT_DOWN, COUNT_DOWN_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
 
-                if (millisUntilFinished.hashCode() % 55 == 0) {
+                if (millisUntilFinished.hashCode() % 99 == 0) {
                     addImage(
-                        (300..600).random().toFloat() / 1000,
-                        0.1f,
-                        (0..99).random().toFloat() / 10000,
-                        (0..50).random().toFloat() / 10000
+                        (200..800).random().toFloat() / 1000,
+                        0.01f,
+                        (0..30).random().toFloat() / 10000,
+                        (0..40).random().toFloat() / 10000
                     )
                 }
 
@@ -129,11 +132,24 @@ class GameFragment : Fragment() {
 
         val trashType = (0..2).random()
 
+        val rand = (0..2).random()
+
         val imgRes = when (trashType) {
-            METAL_OR_PLASTIC -> R.drawable.ic_plastic_1
-            PAPER -> R.drawable.ic_paper_1
-            GLASS -> R.drawable.ic_glass_1
-            else -> R.drawable.ic_glass_1
+            METAL_OR_PLASTIC -> when (rand) {
+                0 -> R.drawable.ic_plastic_1
+                1 -> R.drawable.ic_plastic2
+                else -> R.drawable.ic_plastic3
+            }
+            PAPER -> when (rand) {
+                0 -> R.drawable.ic_paper_1
+                1 -> R.drawable.ic_paper2
+                else -> R.drawable.ic_paper3
+            }
+            GLASS -> when (rand) {
+                0 -> R.drawable.ic_glass1
+                else -> R.drawable.ic_glass2
+            }
+            else -> R.drawable.ic_glass2
         }
         imageView.setImageResource(imgRes)
         val trash = Trash(imageView, xPos, yPos, xVel, yVel, trashType)
@@ -146,7 +162,7 @@ class GameFragment : Fragment() {
                 MotionEvent.ACTION_UP -> {
                     Log.d("GameFragment", "ACTION_UP x=${event.x} y=${event.y}")
                     Log.d("GameFragment", "doThrow args: ${event.x / width}, ${event.y / height}")
-                    trash.doThrow((view.x+event.x)/width , (view.y+event.y)/height )
+                    trash.doThrow((view.x + event.x) / width, (view.y + event.y) / height)
                 }
                 MotionEvent.ACTION_MOVE -> {
                     Log.d("GameFragment", "ACTION_MOVE x=${event.x} y=${event.y}")
@@ -156,11 +172,11 @@ class GameFragment : Fragment() {
                     constraintSet.clone(main_container)
                     constraintSet.setHorizontalBias(
                         view.id,
-                        (view.x+event.x)/width
+                        (view.x + event.x) / width
                     )
                     constraintSet.setVerticalBias(
                         view.id,
-                        (view.y+event.y)/height
+                        (view.y + event.y) / height
                     )
                     constraintSet.applyTo(main_container)
                 }
@@ -226,7 +242,7 @@ class GameFragment : Fragment() {
         get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
     companion object {
-        private const val TIME_TO_COUNT_DOWN = 30_000L
+        private const val TIME_TO_COUNT_DOWN = 31_000L
         private const val COUNT_DOWN_INTERVAL = 10L
     }
 }

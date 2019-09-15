@@ -62,7 +62,7 @@ class Trash(
 
 
     companion object {
-        const val GRAVITY: Float = 0.0001f
+        const val GRAVITY: Float = 0.00001f
         const val PAPER = 0
         const val METAL_OR_PLASTIC = 1
         const val GLASS = 2
