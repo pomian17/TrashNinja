@@ -27,8 +27,6 @@ import kotlinx.android.synthetic.main.fragment_game.*
 import android.util.DisplayMetrics
 
 
-
-
 class GameFragment : Fragment() {
 
     private lateinit var countDownTimer: CountDownTimer
@@ -52,7 +50,7 @@ class GameFragment : Fragment() {
         requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
         Trash.screen_width = displayMetrics.widthPixels
         Trash.screen_height = displayMetrics.heightPixels
-        addImage(0.5f, 0.1f, 0.0001f, 0.0f)
+
         setupTimer()
         countDownTimer.start()
         score_view.text = "0"
@@ -66,7 +64,17 @@ class GameFragment : Fragment() {
     private fun setupTimer() {
         countDownTimer = object : CountDownTimer(TIME_TO_COUNT_DOWN, COUNT_DOWN_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
-                trashes.forEach {
+
+                if (millisUntilFinished.hashCode() % 55 == 0){
+                    addImage(
+                        (300..600).random().toFloat()/1000,
+                        0.1f,
+                        (0..99).random().toFloat()/10000,
+                        (0..50).random().toFloat()/10000
+                    )}
+
+                val tc = trashes.toMutableList()
+                tc.forEach {
                     if (it.state != STATE_TOUCHED) {
                         val res = it.updatePos()
                         if (res == RES_ONGOING) {
@@ -100,7 +108,8 @@ class GameFragment : Fragment() {
 
             override fun onFinish() {
                 val bundle = bundleOf(EXTRA_SCORE to score)
-                Navigation.findNavController(main_container).navigate(R.id.action_gameFragment_to_gameSummaryFragment, bundle)
+                Navigation.findNavController(main_container)
+                    .navigate(R.id.action_gameFragment_to_gameSummaryFragment, bundle)
             }
         }
     }
@@ -137,10 +146,11 @@ class GameFragment : Fragment() {
                     requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
                     val width = displayMetrics.widthPixels
                     val height = displayMetrics.heightPixels
-                    Log.d("GameFragment", "doThrow args: ${event.x/width}, ${event.y/height}")
-                    trash.doThrow(event.x/width, event.y/height)
+                    Log.d("GameFragment", "doThrow args: ${event.x / width}, ${event.y / height}")
+                    trash.doThrow(event.x / width, event.y / height)
                 }
-                else -> {}/*Log.d("GameFragment", event.action.toString())*/
+                else -> {
+                }/*Log.d("GameFragment", event.action.toString())*/
             }
             true
         }
