@@ -1,6 +1,7 @@
 package com.example.trashninja
 
 import android.widget.ImageView
+import kotlin.math.sqrt
 
 class Trash(
     var imageView: ImageView,
@@ -33,6 +34,14 @@ class Trash(
         return RES_ONGOING
     }
 
+    fun doThrow(xDelta: Int, yDelta: Int){
+        var vectLength: Float = sqrt((xDelta*xDelta + yDelta*yDelta).toFloat())
+        var scale: Float= THROW_SPEED/vectLength
+        xVel *= xDelta * scale
+        yVel *= yDelta * scale
+        state = STATE_THROW_BAD
+    }
+
 
     companion object {
         const val TIME_TO_COUNT_DOWN = 30_000L
@@ -50,5 +59,6 @@ class Trash(
         const val RES_SUCCESS = 1
         const val RES_MISS = 0
         const val RES_FAIL = -1
+        const val THROW_SPEED: Float = 0.001f
     }
 }
