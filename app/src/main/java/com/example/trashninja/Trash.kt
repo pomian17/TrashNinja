@@ -1,5 +1,6 @@
 package com.example.trashninja
 
+import android.util.Log
 import android.widget.ImageView
 import kotlin.math.sqrt
 
@@ -34,11 +35,13 @@ class Trash(
         return RES_ONGOING
     }
 
-    fun doThrow(xDelta: Int, yDelta: Int){
-        var vectLength: Float = sqrt((xDelta*xDelta + yDelta*yDelta).toFloat())
-        var scale: Float= THROW_SPEED/vectLength
-        xVel *= xDelta * scale
-        yVel *= yDelta * scale
+    fun doThrow(xDelta: Float, yDelta: Float){
+        var vectLength: Float = sqrt((xDelta*xDelta + yDelta*yDelta))
+        var scale: Float= sqrt(THROW_SPEED/vectLength)
+        xVel = xDelta * scale
+        yVel = yDelta * scale
+
+        Log.d("doThrow", "vectLength: $vectLength, scale $scale, xVel $xVel, yVel $yVel")
         state = STATE_THROW_BAD
     }
 
@@ -59,6 +62,6 @@ class Trash(
         const val RES_SUCCESS = 1
         const val RES_MISS = 0
         const val RES_FAIL = -1
-        const val THROW_SPEED: Float = 0.001f
+        const val THROW_SPEED: Float = 0.0001f
     }
 }

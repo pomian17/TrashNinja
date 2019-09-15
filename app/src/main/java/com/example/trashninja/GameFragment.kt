@@ -24,6 +24,9 @@ import com.example.trashninja.Trash.Companion.RES_SUCCESS
 import com.example.trashninja.Trash.Companion.STATE_THROW_GOOD
 import com.example.trashninja.Trash.Companion.STATE_TOUCHED
 import kotlinx.android.synthetic.main.fragment_game.*
+import android.util.DisplayMetrics
+
+
 
 
 class GameFragment : Fragment() {
@@ -123,9 +126,14 @@ class GameFragment : Fragment() {
                 }
                 MotionEvent.ACTION_UP -> {
                     Log.d("GameFragment", "ACTION_UP x=${event.x} y=${event.y}")
-                    trash.state = STATE_THROW_GOOD
+                    val displayMetrics = DisplayMetrics()
+                    requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+                    val width = displayMetrics.widthPixels
+                    val height = displayMetrics.heightPixels
+                    Log.d("GameFragment", "doThrow args: ${event.x/width}, ${event.y/height}")
+                    trash.doThrow(event.x/width, event.y/height)
                 }
-                else -> Log.d("GameFragment", event.action.toString())
+                else -> {}/*Log.d("GameFragment", event.action.toString())*/
             }
             true
         }
