@@ -48,7 +48,10 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val displayMetrics = DisplayMetrics()
+        requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+        Trash.screen_width = displayMetrics.widthPixels
+        Trash.screen_height = displayMetrics.heightPixels
         addImage(0.5f, 0.1f, 0.0001f, 0.0f)
         setupTimer()
         countDownTimer.start()

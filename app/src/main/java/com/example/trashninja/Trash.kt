@@ -1,5 +1,6 @@
 package com.example.trashninja
 
+import android.util.DisplayMetrics
 import android.widget.ImageView
 import kotlin.math.sqrt
 
@@ -46,6 +47,7 @@ class Trash(
         var a: Float = yDelta.toFloat()/xDelta
         var b: Float = yPos - a*xPos
         var xDest: Float = (BIN_HEIGHT - b)/a
+
         when{
             (xDest>=0 && xDest<0.333) && (trashType == PAPER) -> state=STATE_THROW_GOOD
             (xDest>=0.333 && xDest<0.667) && (trashType == METAL_OR_PLASTIC) -> state=STATE_THROW_GOOD
@@ -72,5 +74,7 @@ class Trash(
         const val RES_MISS = 0
         const val RES_FAIL = -1
         const val THROW_SPEED: Float = 0.001f
+        var screen_width: Int = 0
+        var screen_height: Int = 0
     }
 }
