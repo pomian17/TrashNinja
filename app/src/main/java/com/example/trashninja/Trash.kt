@@ -50,7 +50,7 @@ class Trash(
         }
         val a: Float = yDelta/xDelta
         val b: Float = yPos - a*xPos
-        val xDest: Float = (BIN_HEIGHT - b)/a
+        val xDest: Float = (BIN_HEIGHT - b)/a  + imageView.width.toFloat() / screen_width / 2
 
         state = when{
             (xDest>=0 && xDest<0.333) && (trashType == PAPER) -> STATE_THROW_GOOD
