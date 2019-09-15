@@ -15,18 +15,18 @@ import com.example.trashninja.Trash.Companion.METAL_OR_PLASTIC
 import com.example.trashninja.Trash.Companion.RES_FAIL
 import com.example.trashninja.Trash.Companion.RES_MISS
 import com.example.trashninja.Trash.Companion.RES_ONGOING
-import kotlinx.android.synthetic.main.fragment_game.*
 import com.example.trashninja.Trash.Companion.RES_SUCCESS
+import kotlinx.android.synthetic.main.fragment_game.*
 
 
 class GameFragment : Fragment() {
 
     private lateinit var countDownTimer: CountDownTimer
     private var score: Int = 0
-    set(value) {
-        score_view.text=value.toString()
-        field = value
-    }
+        set(value) {
+            score_view.text = value.toString()
+            field = value
+        }
     val trashes = mutableListOf<Trash>()
 
     override fun onCreateView(
@@ -39,7 +39,7 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        addImage(0.5f,0.0f,0.0f,0.0f, METAL_OR_PLASTIC)
+        addImage(0.5f, 0.1f, 0.0f, 0.0f, METAL_OR_PLASTIC)
         setupTimer()
         countDownTimer.start()
         score_view.text = "0"
@@ -55,7 +55,7 @@ class GameFragment : Fragment() {
             override fun onTick(millisUntilFinished: Long) {
                 trashes.forEach {
                     var res = it.updatePos()
-                    if(res == RES_ONGOING) {
+                    if (res == RES_ONGOING) {
                         val constraintSet = ConstraintSet()
                         constraintSet.clone(main_container)
                         constraintSet.setVerticalBias(
@@ -63,13 +63,13 @@ class GameFragment : Fragment() {
                             it.yPos
                         )
                         constraintSet.applyTo(main_container)
-                    }  else {
+                    } else {
                         main_container.removeView(it.imageView)
                         trashes.remove(it)
-                        when{
-                            (res == RES_SUCCESS) -> score = score + 5
-                            (res == RES_MISS) -> score = score - 2
-                            (res == RES_FAIL) -> score = score - 10
+                        when (res) {
+                            RES_SUCCESS -> score += 5
+                            RES_MISS -> score -= 2
+                            RES_FAIL -> score -= 10
                         }
                     }
                 }
@@ -159,6 +159,5 @@ class GameFragment : Fragment() {
     companion object {
         private const val TIME_TO_COUNT_DOWN = 30_000L
         private const val COUNT_DOWN_INTERVAL = 10L
-
     }
 }
