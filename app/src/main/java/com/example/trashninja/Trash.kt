@@ -35,31 +35,33 @@ class Trash(
         return RES_ONGOING
     }
 
-    fun doThrow(xDelta: Float, yDelta: Float){
-        var vectLength: Float = sqrt((xDelta*xDelta + yDelta*yDelta).toFloat())
-        var scale: Float= sqrt(THROW_SPEED/vectLength)
+    fun doThrow( x: Float, y: Float){
+        val xDelta = x -xPos
+        val yDelta = y - yPos
+        val vectLength: Float = sqrt((xDelta*xDelta + yDelta*yDelta))
+        val scale: Float= sqrt(THROW_SPEED/vectLength)
         xVel = xDelta * scale
         yVel = yDelta * scale
+        xPos = x
+        yPos = y
         if(yDelta<=0){
             state = STATE_THROW_BAD
             return
         }
-        var a: Float = yDelta.toFloat()/xDelta
-        var b: Float = yPos - a*xPos
-        var xDest: Float = (BIN_HEIGHT - b)/a
+        val a: Float = yDelta/xDelta
+        val b: Float = yPos - a*xPos
+        val xDest: Float = (BIN_HEIGHT - b)/a
 
-        when{
-            (xDest>=0 && xDest<0.333) && (trashType == PAPER) -> state=STATE_THROW_GOOD
-            (xDest>=0.333 && xDest<0.667) && (trashType == METAL_OR_PLASTIC) -> state=STATE_THROW_GOOD
-            (xDest>=0.667 && xDest<=1) && (trashType == GLASS) -> state=STATE_THROW_GOOD
-            else -> state=STATE_THROW_BAD
+        state = when{
+            (xDest>=0 && xDest<0.333) && (trashType == PAPER) -> STATE_THROW_GOOD
+            (xDest>=0.333 && xDest<0.667) && (trashType == METAL_OR_PLASTIC) -> STATE_THROW_GOOD
+            (xDest in 0.667..1.0) && (trashType == GLASS) -> STATE_THROW_GOOD
+            else -> STATE_THROW_BAD
         }
     }
 
 
     companion object {
-        const val TIME_TO_COUNT_DOWN = 30_000L
-        const val COUNT_DOWN_INTERVAL = 10L
         const val GRAVITY: Float = 0.0001f
         const val PAPER = 0
         const val METAL_OR_PLASTIC = 1

@@ -4,11 +4,9 @@ import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.DisplayMetrics
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.os.bundleOf
@@ -22,10 +20,9 @@ import com.example.trashninja.Trash.Companion.RES_FAIL
 import com.example.trashninja.Trash.Companion.RES_MISS
 import com.example.trashninja.Trash.Companion.RES_ONGOING
 import com.example.trashninja.Trash.Companion.RES_SUCCESS
-import com.example.trashninja.Trash.Companion.STATE_THROW_GOOD
 import com.example.trashninja.Trash.Companion.STATE_TOUCHED
 import kotlinx.android.synthetic.main.fragment_game.*
-import android.util.DisplayMetrics
+import kotlin.properties.Delegates
 
 
 class GameFragment : Fragment() {
@@ -37,6 +34,9 @@ class GameFragment : Fragment() {
             field = value
         }
     val trashes = mutableListOf<Trash>()
+
+    var width by Delegates.notNull<Int>()
+    var height  by Delegates.notNull<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -51,6 +51,8 @@ class GameFragment : Fragment() {
         requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
         Trash.screen_width = displayMetrics.widthPixels
         Trash.screen_height = displayMetrics.heightPixels
+        width = displayMetrics.widthPixels
+        height = displayMetrics.heightPixels
 
         setupTimer()
         countDownTimer.start()
@@ -66,13 +68,14 @@ class GameFragment : Fragment() {
         countDownTimer = object : CountDownTimer(TIME_TO_COUNT_DOWN, COUNT_DOWN_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
 
-                if (millisUntilFinished.hashCode() % 55 == 0){
+                if (millisUntilFinished.hashCode() % 55 == 0) {
                     addImage(
-                        (300..600).random().toFloat()/1000,
+                        (300..600).random().toFloat() / 1000,
                         0.1f,
-                        (0..99).random().toFloat()/10000,
-                        (0..50).random().toFloat()/10000
-                    )}
+                        (0..99).random().toFloat() / 10000,
+                        (0..50).random().toFloat() / 10000
+                    )
+                }
 
                 val tc = trashes.toMutableList()
                 tc.forEach {
@@ -134,7 +137,7 @@ class GameFragment : Fragment() {
         }
         imageView.setImageResource(imgRes)
         val trash = Trash(imageView, xPos, yPos, xVel, yVel, trashType)
-        imageView.setOnTouchListener { _, event ->
+        imageView.setOnTouchListener { view, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     Log.d("GameFragment", "ACTION_DOWN")
@@ -142,21 +145,24 @@ class GameFragment : Fragment() {
                 }
                 MotionEvent.ACTION_UP -> {
                     Log.d("GameFragment", "ACTION_UP x=${event.x} y=${event.y}")
-                    val displayMetrics = DisplayMetrics()
-                    requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
-                    val width = displayMetrics.widthPixels
-                    val height = displayMetrics.heightPixels
                     Log.d("GameFragment", "doThrow args: ${event.x / width}, ${event.y / height}")
-                    trash.doThrow(event.x / width, event.y / height)
+                    trash.doThrow((view.x+event.x)/width , (view.y+event.y)/height )
                 }
                 MotionEvent.ACTION_MOVE -> {
                     Log.d("GameFragment", "ACTION_MOVE x=${event.x} y=${event.y}")
-                    val displayMetrics = DisplayMetrics()
-                    requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
-                    val width = displayMetrics.widthPixels
-                    val height = displayMetrics.heightPixels
+
                     Log.d("GameFragment", "doThrow args: ${event.x / width}, ${event.y / height}")
-                    //trash.followTouch(event.x / width, event.y / height)
+                    val constraintSet = ConstraintSet()
+                    constraintSet.clone(main_container)
+                    constraintSet.setHorizontalBias(
+                        view.id,
+                        (view.x+event.x)/width
+                    )
+                    constraintSet.setVerticalBias(
+                        view.id,
+                        (view.y+event.y)/height
+                    )
+                    constraintSet.applyTo(main_container)
                 }
                 else -> {
                 }/*Log.d("GameFragment", event.action.toString())*/
