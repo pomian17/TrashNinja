@@ -2,10 +2,14 @@ package com.example.trashninja
 
 import android.widget.ImageView
 
-private class Trash(
-    var imageView: ImageView, var xPos: Double, var yPos: Double,
-    var xVel: Double, var yVel: Double,
-    val trashType: Int, var state: Int = STATE_FREEFALL
+class Trash(
+    var imageView: ImageView,
+    var xPos: Double,
+    var yPos: Double,
+    var xVel: Double,
+    var yVel: Double,
+    val trashType: Int,
+    var state: Int = STATE_FREEFALL
 ) {
     fun updatePos(): Int {
         if (state != STATE_TOUCHED) {
@@ -31,20 +35,20 @@ private class Trash(
 
 
     companion object {
-        private const val TIME_TO_COUNT_DOWN = 30_000L
-        private const val COUNT_DOWN_INTERVAL = 10L
-        private const val GRAVITY: Double = 0.0001
-        private const val PAPER = 1
-        private const val METAL_OR_PLASTIC = 2
-        private const val GLASS = 3
-        private const val STATE_FREEFALL = 1
-        private const val STATE_TOUCHED = 2
-        private const val STATE_THROW_BAD = 3
-        private const val STATE_THROW_GOOD = 4
-        private const val BIN_HEIGHT = 0.1
-        private const val RES_ONGOING = 2
-        private const val RES_SUCCESS = 1
-        private const val RES_MISS = 0
-        private const val RES_FAIL = -1
+        const val TIME_TO_COUNT_DOWN = 30_000L
+        const val COUNT_DOWN_INTERVAL = 10L
+        const val GRAVITY: Double = 0.0001
+        const val PAPER = 1
+        const val METAL_OR_PLASTIC = 2
+        const val GLASS = 3
+        const val STATE_FREEFALL = 1
+        const val STATE_TOUCHED = 2
+        const val STATE_THROW_BAD = 3
+        const val STATE_THROW_GOOD = 4
+        const val BIN_HEIGHT = 0.1
+        const val RES_ONGOING = 2
+        const val RES_SUCCESS = 1
+        const val RES_MISS = 0
+        const val RES_FAIL = -1
     }
 }

@@ -11,13 +11,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
+import com.example.trashninja.Trash.Companion.METAL_OR_PLASTIC
 import kotlinx.android.synthetic.main.fragment_game.*
 
 
 class GameFragment : Fragment() {
 
     private lateinit var countDownTimer: CountDownTimer
-    val imageViews = mutableListOf<ImageView>()
+    val trashes = mutableListOf<Trash>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -43,12 +44,12 @@ class GameFragment : Fragment() {
     private fun setupTimer() {
         countDownTimer = object : CountDownTimer(TIME_TO_COUNT_DOWN, COUNT_DOWN_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
-                imageViews.firstOrNull()?.let {
+                trashes.forEach {
                     val constraintSet = ConstraintSet()
                     constraintSet.clone(main_container)
                     constraintSet.setVerticalBias(
-                        it.id,
-                        millisUntilFinished.toFloat() / TIME_TO_COUNT_DOWN.toFloat()
+                        it.imageView.id,
+                        (TIME_TO_COUNT_DOWN - millisUntilFinished).toFloat() / TIME_TO_COUNT_DOWN.toFloat()
                     )
                     constraintSet.applyTo(main_container)
                 }
@@ -115,8 +116,18 @@ class GameFragment : Fragment() {
             ConstraintSet.BOTTOM,
             0
         )
+
+        constraintSet.setVerticalBias(
+            imageView.id,
+            0.5f
+        )
+        constraintSet.setHorizontalBias(
+            imageView.id,
+            0.4f
+        )
         constraintSet.applyTo(main_container)
-        imageViews.add(imageView)
+        trashes.add(Trash(imageView, 0.4, 0.5, 1.0, 1.0, METAL_OR_PLASTIC))
+
     }
 
     companion object {
