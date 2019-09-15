@@ -1,6 +1,7 @@
 package com.example.trashninja
 
 import android.annotation.SuppressLint
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -155,7 +156,7 @@ class GameFragment : Fragment() {
                     val width = displayMetrics.widthPixels
                     val height = displayMetrics.heightPixels
                     Log.d("GameFragment", "doThrow args: ${event.x / width}, ${event.y / height}")
-                    trash.followTouch(event.x / width, event.y / height)
+                    //trash.followTouch(event.x / width, event.y / height)
                 }
                 else -> {
                 }/*Log.d("GameFragment", event.action.toString())*/
@@ -163,6 +164,8 @@ class GameFragment : Fragment() {
             true
         }
         imageView.id = View.generateViewId()
+
+        imageView.setPadding(8.px, 8.px, 8.px, 8.px)
 
         main_container.addView(imageView)
         val constraintSet = ConstraintSet()
@@ -212,6 +215,9 @@ class GameFragment : Fragment() {
 
         trashes.add(trash)
     }
+
+    private val Int.px: Int
+        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
     companion object {
         private const val TIME_TO_COUNT_DOWN = 30_000L
