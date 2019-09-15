@@ -61,14 +61,13 @@ class GameFragment : Fragment() {
         countDownTimer = object : CountDownTimer(TIME_TO_COUNT_DOWN, COUNT_DOWN_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
 
-                if (millisUntilFinished.hashCode() % 65 == 0){
-                    addImage(0.5f, 0.1f, 0.0001f, 0.0f)}
-//                    addImage(
-//                        (0..999).random().toFloat()/100,
-//                        0f,
-//                        (0..9999).random().toFloat()/100,
-//                        (0..5000).random().toFloat()/100
-//                    )}
+                if (millisUntilFinished.hashCode() % 55 == 0){
+                    addImage(
+                        (300..600).random().toFloat()/1000,
+                        0.1f,
+                        (0..99).random().toFloat()/10000,
+                        (0..50).random().toFloat()/10000
+                    )}
 
                 val tc = trashes.toMutableList()
                 tc.forEach {
