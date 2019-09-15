@@ -4,10 +4,10 @@ import android.widget.ImageView
 
 class Trash(
     var imageView: ImageView,
-    var xPos: Double,
-    var yPos: Double,
-    var xVel: Double,
-    var yVel: Double,
+    var xPos: Float,
+    var yPos: Float,
+    var xVel: Float,
+    var yVel: Float,
     val trashType: Int,
     var state: Int = STATE_FREEFALL
 ) {
@@ -23,7 +23,7 @@ class Trash(
             return RES_SUCCESS
         }
 
-        if ((xPos >= 100) || (xPos <= 0) || (yPos >= 100) || (yPos <= 0)) {
+        if ((xPos >= 1) || (xPos <= 0) || (yPos >= 1) || (yPos <= 0)) {
             if (state == STATE_THROW_BAD) {
                 return RES_FAIL
             } else {
@@ -37,7 +37,7 @@ class Trash(
     companion object {
         const val TIME_TO_COUNT_DOWN = 30_000L
         const val COUNT_DOWN_INTERVAL = 10L
-        const val GRAVITY: Double = 0.0001
+        const val GRAVITY: Float = 0.0001f
         const val PAPER = 1
         const val METAL_OR_PLASTIC = 2
         const val GLASS = 3
