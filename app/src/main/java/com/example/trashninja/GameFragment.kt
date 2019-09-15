@@ -10,7 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import com.example.trashninja.GameSummaryFragment.Companion.EXTRA_SCORE
 import com.example.trashninja.Trash.Companion.GLASS
 import com.example.trashninja.Trash.Companion.METAL_OR_PLASTIC
 import com.example.trashninja.Trash.Companion.PAPER
@@ -21,6 +24,9 @@ import com.example.trashninja.Trash.Companion.RES_SUCCESS
 import com.example.trashninja.Trash.Companion.STATE_THROW_GOOD
 import com.example.trashninja.Trash.Companion.STATE_TOUCHED
 import kotlinx.android.synthetic.main.fragment_game.*
+import android.util.DisplayMetrics
+
+
 
 
 class GameFragment : Fragment() {
@@ -86,7 +92,8 @@ class GameFragment : Fragment() {
             }
 
             override fun onFinish() {
-
+                val bundle = bundleOf(EXTRA_SCORE to score)
+                Navigation.findNavController(main_container).navigate(R.id.action_gameFragment_to_gameSummaryFragment, bundle)
             }
         }
     }
@@ -118,10 +125,15 @@ class GameFragment : Fragment() {
                     trash.state = STATE_TOUCHED
                 }
                 MotionEvent.ACTION_UP -> {
-                    Log.d("GameFragment", "ACTION_UP")
-                    trash.state = STATE_THROW_GOOD
+                    Log.d("GameFragment", "ACTION_UP x=${event.x} y=${event.y}")
+                    val displayMetrics = DisplayMetrics()
+                    requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+                    val width = displayMetrics.widthPixels
+                    val height = displayMetrics.heightPixels
+                    Log.d("GameFragment", "doThrow args: ${event.x/width}, ${event.y/height}")
+                    trash.doThrow(event.x/width, event.y/height)
                 }
-                else -> Log.d("GameFragment", event.action.toString())
+                else -> {}/*Log.d("GameFragment", event.action.toString())*/
             }
             true
         }

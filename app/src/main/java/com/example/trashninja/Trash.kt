@@ -34,11 +34,11 @@ class Trash(
         return RES_ONGOING
     }
 
-    fun doThrow(xDelta: Int, yDelta: Int){
+    fun doThrow(xDelta: Float, yDelta: Float){
         var vectLength: Float = sqrt((xDelta*xDelta + yDelta*yDelta).toFloat())
-        var scale: Float= THROW_SPEED/vectLength
-        xVel *= xDelta * scale
-        yVel *= yDelta * scale
+        var scale: Float= sqrt(THROW_SPEED/vectLength)
+        xVel = xDelta * scale
+        yVel = yDelta * scale
         if(yDelta>=0){
             state = STATE_THROW_BAD
             return
