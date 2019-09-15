@@ -11,7 +11,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
+import com.example.trashninja.Trash.Companion.GLASS
 import com.example.trashninja.Trash.Companion.METAL_OR_PLASTIC
+import com.example.trashninja.Trash.Companion.PAPER
 import com.example.trashninja.Trash.Companion.RES_FAIL
 import com.example.trashninja.Trash.Companion.RES_MISS
 import com.example.trashninja.Trash.Companion.RES_ONGOING
@@ -39,7 +41,7 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        addImage(0.5f, 0.1f, 0.0f, 0.0f, METAL_OR_PLASTIC)
+        addImage(0.5f, 0.1f, 0.0001f, 0.0f)
         setupTimer()
         countDownTimer.start()
         score_view.text = "0"
@@ -90,12 +92,20 @@ class GameFragment : Fragment() {
         xPos: Float,
         yPos: Float,
         xVel: Float,
-        yVel: Float,
-        trashType: Int
+        yVel: Float
     ) {
         val imageView = ImageView(this.context)
 
-        imageView.setImageResource(R.drawable.ic_android_black_24dp)
+        val trashType = (0..2).random()
+
+        val imgRes = when (trashType) {
+            METAL_OR_PLASTIC -> R.drawable.ic_plastic_1
+            PAPER -> R.drawable.ic_paper_1
+            GLASS -> R.drawable.ic_glass_1
+            else -> R.drawable.ic_glass_1
+        }
+        imageView.setImageResource(imgRes)
+        trashes.add(Trash(imageView, xPos, yPos, xVel, yVel, trashType))
         imageView.setOnTouchListener { _, event ->
             when (event.action) {
                 //TODO
@@ -152,7 +162,6 @@ class GameFragment : Fragment() {
             xPos
         )
         constraintSet.applyTo(main_container)
-        trashes.add(Trash(imageView, xPos, yPos, xVel, yVel, trashType))
 
     }
 

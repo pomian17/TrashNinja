@@ -38,9 +38,9 @@ class Trash(
         const val TIME_TO_COUNT_DOWN = 30_000L
         const val COUNT_DOWN_INTERVAL = 10L
         const val GRAVITY: Float = 0.0001f
-        const val PAPER = 1
-        const val METAL_OR_PLASTIC = 2
-        const val GLASS = 3
+        const val PAPER = 0
+        const val METAL_OR_PLASTIC = 1
+        const val GLASS = 2
         const val STATE_FREEFALL = 1
         const val STATE_TOUCHED = 2
         const val STATE_THROW_BAD = 3
