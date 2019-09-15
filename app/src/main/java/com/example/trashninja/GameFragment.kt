@@ -18,6 +18,8 @@ import com.example.trashninja.Trash.Companion.RES_FAIL
 import com.example.trashninja.Trash.Companion.RES_MISS
 import com.example.trashninja.Trash.Companion.RES_ONGOING
 import com.example.trashninja.Trash.Companion.RES_SUCCESS
+import com.example.trashninja.Trash.Companion.STATE_THROW_GOOD
+import com.example.trashninja.Trash.Companion.STATE_TOUCHED
 import kotlinx.android.synthetic.main.fragment_game.*
 
 
@@ -56,22 +58,24 @@ class GameFragment : Fragment() {
         countDownTimer = object : CountDownTimer(TIME_TO_COUNT_DOWN, COUNT_DOWN_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
                 trashes.forEach {
-                    var res = it.updatePos()
-                    if (res == RES_ONGOING) {
-                        val constraintSet = ConstraintSet()
-                        constraintSet.clone(main_container)
-                        constraintSet.setVerticalBias(
-                            it.imageView.id,
-                            it.yPos
-                        )
-                        constraintSet.applyTo(main_container)
-                    } else {
-                        main_container.removeView(it.imageView)
-                        trashes.remove(it)
-                        when (res) {
-                            RES_SUCCESS -> score += 5
-                            RES_MISS -> score -= 2
-                            RES_FAIL -> score -= 10
+                    if (it.state != STATE_TOUCHED) {
+                        val res = it.updatePos()
+                        if (res == RES_ONGOING) {
+                            val constraintSet = ConstraintSet()
+                            constraintSet.clone(main_container)
+                            constraintSet.setVerticalBias(
+                                it.imageView.id,
+                                it.yPos
+                            )
+                            constraintSet.applyTo(main_container)
+                        } else {
+                            main_container.removeView(it.imageView)
+                            trashes.remove(it)
+                            when (res) {
+                                RES_SUCCESS -> score += 5
+                                RES_MISS -> score -= 2
+                                RES_FAIL -> score -= 10
+                            }
                         }
                     }
                 }
@@ -105,12 +109,18 @@ class GameFragment : Fragment() {
             else -> R.drawable.ic_glass_1
         }
         imageView.setImageResource(imgRes)
-        trashes.add(Trash(imageView, xPos, yPos, xVel, yVel, trashType))
+        val trash = Trash(imageView, xPos, yPos, xVel, yVel, trashType)
         imageView.setOnTouchListener { _, event ->
             when (event.action) {
                 //TODO
-                MotionEvent.ACTION_DOWN -> Log.d("GameFragment", "ACTION_DOWN")
-                MotionEvent.ACTION_UP -> Log.d("GameFragment", "ACTION_DOWN")
+                MotionEvent.ACTION_DOWN -> {
+                    Log.d("GameFragment", "ACTION_DOWN")
+                    trash.state = STATE_TOUCHED
+                }
+                MotionEvent.ACTION_UP -> {
+                    Log.d("GameFragment", "ACTION_UP")
+                    trash.state = STATE_THROW_GOOD
+                }
                 else -> Log.d("GameFragment", event.action.toString())
             }
             true
@@ -163,6 +173,7 @@ class GameFragment : Fragment() {
         )
         constraintSet.applyTo(main_container)
 
+        trashes.add(trash)
     }
 
     companion object {
