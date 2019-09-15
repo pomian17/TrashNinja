@@ -10,7 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import com.example.trashninja.GameSummaryFragment.Companion.EXTRA_SCORE
 import com.example.trashninja.Trash.Companion.GLASS
 import com.example.trashninja.Trash.Companion.METAL_OR_PLASTIC
 import com.example.trashninja.Trash.Companion.PAPER
@@ -86,7 +89,8 @@ class GameFragment : Fragment() {
             }
 
             override fun onFinish() {
-
+                val bundle = bundleOf(EXTRA_SCORE to score)
+                Navigation.findNavController(main_container).navigate(R.id.action_gameFragment_to_gameSummaryFragment, bundle)
             }
         }
     }
@@ -118,7 +122,7 @@ class GameFragment : Fragment() {
                     trash.state = STATE_TOUCHED
                 }
                 MotionEvent.ACTION_UP -> {
-                    Log.d("GameFragment", "ACTION_UP")
+                    Log.d("GameFragment", "ACTION_UP x=${event.x} y=${event.y}")
                     trash.state = STATE_THROW_GOOD
                 }
                 else -> Log.d("GameFragment", event.action.toString())
