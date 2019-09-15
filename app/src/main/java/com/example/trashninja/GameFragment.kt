@@ -131,7 +131,6 @@ class GameFragment : Fragment() {
         val trash = Trash(imageView, xPos, yPos, xVel, yVel, trashType)
         imageView.setOnTouchListener { _, event ->
             when (event.action) {
-                //TODO
                 MotionEvent.ACTION_DOWN -> {
                     Log.d("GameFragment", "ACTION_DOWN")
                     trash.state = STATE_TOUCHED
@@ -144,6 +143,15 @@ class GameFragment : Fragment() {
                     val height = displayMetrics.heightPixels
                     Log.d("GameFragment", "doThrow args: ${event.x / width}, ${event.y / height}")
                     trash.doThrow(event.x / width, event.y / height)
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    Log.d("GameFragment", "ACTION_MOVE x=${event.x} y=${event.y}")
+                    val displayMetrics = DisplayMetrics()
+                    requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+                    val width = displayMetrics.widthPixels
+                    val height = displayMetrics.heightPixels
+                    Log.d("GameFragment", "doThrow args: ${event.x / width}, ${event.y / height}")
+                    trash.followTouch(event.x / width, event.y / height)
                 }
                 else -> {
                 }/*Log.d("GameFragment", event.action.toString())*/
