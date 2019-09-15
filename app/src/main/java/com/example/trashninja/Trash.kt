@@ -39,7 +39,19 @@ class Trash(
         var scale: Float= THROW_SPEED/vectLength
         xVel *= xDelta * scale
         yVel *= yDelta * scale
-        state = STATE_THROW_BAD
+        if(yDelta>=0){
+            state = STATE_THROW_BAD
+            return
+        }
+        var a: Float = yDelta.toFloat()/xDelta
+        var b: Float = yPos - a*yPos
+        var xDest: Float = (BIN_HEIGHT - b)/a
+        when{
+            (xDest>=0 && xDest<0.333) && (trashType == PAPER) -> state=STATE_THROW_GOOD
+            (xDest>=0.333 && xDest<0.667) && (trashType == METAL_OR_PLASTIC) -> state=STATE_THROW_GOOD
+            (xDest>=0.667 && xDest<=1) && (trashType == GLASS) -> state=STATE_THROW_GOOD
+            else -> state=STATE_THROW_BAD
+        }
     }
 
 
@@ -54,7 +66,7 @@ class Trash(
         const val STATE_TOUCHED = 2
         const val STATE_THROW_BAD = 3
         const val STATE_THROW_GOOD = 4
-        const val BIN_HEIGHT = 0.1
+        const val BIN_HEIGHT = 0.1f
         const val RES_ONGOING = 2
         const val RES_SUCCESS = 1
         const val RES_MISS = 0
